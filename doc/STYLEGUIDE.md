@@ -14,3 +14,4 @@ Only additions here (see .clang-tidy).
 
 - Write `final` for methods and classes if possible.
 - Write `noexcept` for methods if possible.
+- Use pragma once instead of ifdef guard
