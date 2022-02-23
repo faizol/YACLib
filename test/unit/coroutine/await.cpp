@@ -36,7 +36,7 @@ TEST(Await, JustWorksPack) {
   tp->Wait();
 }
 
-TEST(Await, JusWorksRange) {
+TEST(Await, JustWorksRange) {
   auto tp = yaclib::MakeThreadPool();
   auto coro = [&](yaclib::IThreadPoolPtr tp) -> yaclib::Future<int> {
     std::array<yaclib::Future<int>, 2> arr;
@@ -48,7 +48,7 @@ TEST(Await, JusWorksRange) {
       return 2;
     });
 
-    co_await yaclib::Await(arr.begin(), arr.end());
+    co_await yaclib::Await(arr.begin(), 2);
     co_return std::move(arr[0]).GetUnsafe().Ok() + std::move(arr[1]).GetUnsafe().Ok();
   };
   auto future = coro(tp);

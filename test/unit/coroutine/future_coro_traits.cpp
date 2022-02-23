@@ -60,6 +60,18 @@ TEST(CoroTraits, ThrowException) {
   EXPECT_THROW(std::move(future).GetUnsafe().Ok(), std::runtime_error);
 }
 
+yaclib::Future<void> throw_exc_void_at1(int x) {
+  if (x == 1) {
+    throw std::runtime_error{"From coro"};
+  }
+  co_return;
+}
+
+TEST(CoroTraits, ThrowExceptionVoid) {
+  auto future = throw_exc_void_at1(1);
+  EXPECT_THROW(std::move(future).GetUnsafe().Ok(), std::runtime_error);
+}
+
 yaclib::Future<int> nested_intermed_coro(int x) {
   auto f = test_void_coro();
   EXPECT_TRUE(f.Ready());

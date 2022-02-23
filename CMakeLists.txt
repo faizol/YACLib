@@ -36,7 +36,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 list(APPEND CMAKE_MODULE_PATH "${YACLIB_SOURCE_DIR}/cmake")
 include(yaclib_flags)
-
 add_subdirectory(src) # Create static library
 
 if (YACLIB_TEST)

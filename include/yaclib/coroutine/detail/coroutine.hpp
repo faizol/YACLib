@@ -1,6 +1,8 @@
 #pragma once
 
-#if defined(__clang__)
+#include <yaclib/coro_config.hpp>
+
+#if YACLIB_CORO_EXPERIMENTAL
 #include <experimental/coroutine>
 
 namespace yaclib_std {
@@ -12,7 +14,7 @@ using std::experimental::suspend_never;
 
 }  // namespace yaclib_std
 
-#else
+#elif YACLIB_CORO_FINAL
 #include <coroutine>
 
 namespace yaclib_std {
@@ -23,4 +25,5 @@ using std::suspend_always;
 using std::suspend_never;
 
 }  // namespace yaclib_std
+#else
 #endif
