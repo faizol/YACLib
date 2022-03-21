@@ -36,13 +36,6 @@ if (YACLIB_FAULT)
   list(APPEND YACLIB_DEFINITIONS YACLIB_FAULT)
 endif ()
 
-if (YACLIB_LOG STREQUAL "ERROR")
-  list(APPEND YACLIB_DEFINITIONS YACLIB_LOG_ERROR)
-  list(APPEND YACLIB_DEFINITIONS YACLIB_LOG_INFO)
-elseif (YACLIB_LOG STREQUAL "INFO")
-  list(APPEND YACLIB_DEFINITIONS YACLIB_LOG_INFO)
-endif ()
-
 set(YACLIB_EXAMPLE_SOURCES
   example/async/simple
   example/executor/thread_pool
@@ -53,7 +46,6 @@ set(YACLIB_EXAMPLE_SOURCES
 set(YACLIB_UNIT_SOURCES
   unit/util/intrusive_ptr
   unit/util/result
-  unit/util/logging
   unit/executor/task
   unit/async/get
   unit/async/future
@@ -68,6 +60,14 @@ set(YACLIB_UNIT_SOURCES
   unit/async/stress
   unit/executor/strand
   )
+
+if (YACLIB_LOG STREQUAL "ERROR")
+  list(APPEND YACLIB_DEFINITIONS YACLIB_LOG_ERROR)
+elseif (YACLIB_LOG STREQUAL "INFO")
+  list(APPEND YACLIB_UNIT_SOURCES unit/util/logging)
+  list(APPEND YACLIB_DEFINITIONS YACLIB_LOG_ERROR)
+  list(APPEND YACLIB_DEFINITIONS YACLIB_LOG_INFO)
+endif ()
 
 if (CORO)
   list(APPEND YACLIB_UNIT_SOURCES
@@ -106,6 +106,12 @@ if (YACLIB_TEST STREQUAL "SINGLE")
   list(TRANSFORM YACLIB_TEST_SOURCES APPEND .cpp)
   add_executable(yaclib_test test.cpp ${YACLIB_TEST_SOURCES})
   yaclib_add_test(yaclib_test)
+
+  if (NOT (YACLIB_LOG STREQUAL "INFO"))
+    add_executable(LoggingTest test.cpp unit/util/logging.cpp)
+    target_compile_definitions(LoggingTest PRIVATE YACLIB_LOG_ERROR YACLIB_LOG_INFO)
+    yaclib_add_test(LoggingTest)
+  endif ()
 else ()
   foreach (TEST_SOURCE ${YACLIB_TEST_SOURCES})
     string(REPLACE "/" "_" TEST_NAME ${TEST_SOURCE})
