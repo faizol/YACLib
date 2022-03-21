@@ -2,10 +2,9 @@
 #include <yaclib/log.hpp>
 
 #include <cstdio>
+#include <iostream>
 
 #include <gtest/gtest.h>
-
-#define GTEST_COUT std::cerr << "[          ] [ INFO ] "
 
 int main(int argc, char** argv) {
 #ifdef __GLIBCPP__
@@ -24,9 +23,9 @@ int main(int argc, char** argv) {
   });
   yaclib::SetInfoCallback([](std::string_view file, std::size_t line, std::string_view function,
                              std::string_view /*condition*/, std::string_view message) {
-    GTEST_COUT << message << " in" << file << ":" << line << ". Function name: " << function << '\n';
+    std::cerr << "[          ] [ INFO ] " << message << " in" << file << ":" << line << ":" << function << '\n';
   });
-  SetFrequency(8u);
-  SetSleepTime(200u);
+  yaclib::SetFrequency(8);
+  yaclib::SetSleepTime(200);
   return RUN_ALL_TESTS();
 }
