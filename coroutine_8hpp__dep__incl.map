@@ -1,0 +1,9 @@
+<map id="include/yaclib/coroutine/detail/coroutine.hpp" name="include/yaclib/coroutine/detail/coroutine.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="47,5,204,47"/>
+<area shape="rect" id="node2" href="$await_8hpp.html" title=" " alt="" coords="5,184,163,225"/>
+<area shape="rect" id="node3" href="$future__awaiter_8hpp.html" title=" " alt="" coords="42,95,209,136"/>
+<area shape="rect" id="node4" href="$suspend__condition_8hpp.html" title=" " alt="" coords="233,95,426,136"/>
+<area shape="rect" id="node5" href="$coroutine__deleter_8hpp.html" title=" " alt="" coords="277,184,461,225"/>
+<area shape="rect" id="node6" href="$promise__type_8hpp.html" title=" " alt="" coords="169,273,332,315"/>
+<area shape="rect" id="node7" href="$future__coro__traits_8hpp.html" title=" " alt="" coords="231,363,388,404"/>
+</map>

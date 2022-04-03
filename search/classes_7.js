@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['iexecutor_0',['IExecutor',['../classyaclib_1_1IExecutor.html',1,'yaclib']]],
+  ['ifunc_1',['IFunc',['../classyaclib_1_1IFunc.html',1,'yaclib']]],
+  ['inline_2',['Inline',['../classyaclib_1_1Inline.html',1,'yaclib']]],
+  ['inlinecore_3',['InlineCore',['../classyaclib_1_1detail_1_1InlineCore.html',1,'yaclib::detail']]],
+  ['instantiationtypes_4',['InstantiationTypes',['../structyaclib_1_1detail_1_1InstantiationTypes.html',1,'yaclib::detail']]],
+  ['instantiationtypes_3c_20t_2c_20t_3c_20v_2c_20e_20_3e_20_3e_5',['InstantiationTypes&lt; T, T&lt; V, E &gt; &gt;',['../structyaclib_1_1detail_1_1InstantiationTypes_3_01T_00_01T_3_01V_00_01E_01_4_01_4.html',1,'yaclib::detail']]],
+  ['interface_6',['Interface',['../classInterface.html',1,'']]],
+  ['intrusiveptr_7',['IntrusivePtr',['../classyaclib_1_1IntrusivePtr.html',1,'yaclib']]],
+  ['intrusiveptr_3c_20iexecutor_20_3e_8',['IntrusivePtr&lt; IExecutor &gt;',['../classyaclib_1_1IntrusivePtr.html',1,'yaclib']]],
+  ['intrusiveptr_3c_20std_3a_3aconditional_5ft_3c_20std_3a_3ais_5fvoid_5fv_3c_20v_20_3e_2c_20void_2c_20std_3a_3aconditional_5ft_3c_200_20_21_3d0_2c_20std_3a_3aarray_3c_20v_2c_200_20_3e_2c_20std_3a_3avector_3c_20v_20_3e_20_3e_20_3e_2c_20e_20_3e_9',['IntrusivePtr&lt; std::conditional_t&lt; std::is_void_v&lt; V &gt;, void, std::conditional_t&lt; 0 !=0, std::array&lt; V, 0 &gt;, std::vector&lt; V &gt; &gt; &gt;, E &gt;',['../classyaclib_1_1IntrusivePtr.html',1,'yaclib']]],
+  ['intrusiveptr_3c_20v_2c_20e_20_3e_10',['IntrusivePtr&lt; V, E &gt;',['../classyaclib_1_1IntrusivePtr.html',1,'yaclib']]],
+  ['intrusiveptr_3c_20v_2c_20stoperror_20_3e_11',['IntrusivePtr&lt; V, StopError &gt;',['../classyaclib_1_1IntrusivePtr.html',1,'yaclib']]],
+  ['intrusiveptr_3c_20yaclib_3a_3airef_20_3e_12',['IntrusivePtr&lt; yaclib::IRef &gt;',['../classyaclib_1_1IntrusivePtr.html',1,'yaclib']]],
+  ['intrusiveptr_3c_20yaclib_3a_3aitask_20_3e_13',['IntrusivePtr&lt; yaclib::ITask &gt;',['../classyaclib_1_1IntrusivePtr.html',1,'yaclib']]],
+  ['invoke_14',['Invoke',['../structyaclib_1_1detail_1_1Invoke.html',1,'yaclib::detail']]],
+  ['invoke_3c_20functor_2c_20void_20_3e_15',['Invoke&lt; Functor, void &gt;',['../structyaclib_1_1detail_1_1Invoke_3_01Functor_00_01void_01_4.html',1,'yaclib::detail']]],
+  ['iref_16',['IRef',['../classyaclib_1_1IRef.html',1,'yaclib']]],
+  ['isinstantiationof_17',['IsInstantiationOf',['../structyaclib_1_1detail_1_1IsInstantiationOf.html',1,'yaclib::detail']]],
+  ['isinstantiationof_3c_20t_2c_20t_3c_20u_2e_2e_2e_20_3e_20_3e_18',['IsInstantiationOf&lt; T, T&lt; U... &gt; &gt;',['../structyaclib_1_1detail_1_1IsInstantiationOf_3_01T_00_01T_3_01U_8_8_8_01_4_01_4.html',1,'yaclib::detail']]],
+  ['isinvocable_19',['IsInvocable',['../structyaclib_1_1detail_1_1IsInvocable.html',1,'yaclib::detail']]],
+  ['isinvocable_3c_20functor_2c_20void_20_3e_20',['IsInvocable&lt; Functor, void &gt;',['../structyaclib_1_1detail_1_1IsInvocable_3_01Functor_00_01void_01_4.html',1,'yaclib::detail']]],
+  ['itask_21',['ITask',['../classyaclib_1_1ITask.html',1,'yaclib']]],
+  ['ithread_22',['IThread',['../classyaclib_1_1IThread.html',1,'yaclib']]],
+  ['ithreadfactory_23',['IThreadFactory',['../classyaclib_1_1IThreadFactory.html',1,'yaclib']]],
+  ['ithreadpool_24',['IThreadPool',['../classyaclib_1_1IThreadPool.html',1,'yaclib']]]
+];
