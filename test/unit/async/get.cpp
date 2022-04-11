@@ -56,14 +56,3 @@ TEST(Get, FulFillTimeout2) {
   std::move(p).Set(42);
   EXPECT_EQ(42, std::move(f).Get().Ok());
 }
-
-TEST(Dummy, SetStop) {
-  {
-    auto core = yaclib::MakeIntrusive<yaclib::detail::ResultCore<int, yaclib::StopError>>(42);
-    core->SetStop();
-  }
-  {
-    auto core = yaclib::MakeIntrusive<yaclib::detail::ResultCore<void, void>>();
-    core->SetStop();
-  }
-}

@@ -21,6 +21,7 @@ class alignas(kCacheLineSize) Strand : public IExecutor, public ITask {
   }
 
   ~Strand() override {
+    assert(_tasks.load(std::memory_order_acquire) == Mark());
   }
 
  private:
@@ -29,53 +30,53 @@ class alignas(kCacheLineSize) Strand : public IExecutor, public ITask {
   }
 
   void Submit(ITask& task) noexcept final {
-    _tasks.Put(task);
-
-    if (_work_counter.fetch_add(1, std::memory_order_acq_rel) == 0) {
+    auto* old = _tasks.load(std::memory_order_relaxed);
+    do {
+      task.next = old == Mark() ? nullptr : old;
+    } while (!_tasks.compare_exchange_weak(old, &task, std::memory_order_release, std::memory_order_relaxed));
+    if (old == Mark()) {
       static_cast<ITask&>(*this).IncRef();
       _executor->Submit(*this);
     }
   }
 
   void Call() noexcept final {
-    auto* nodes = _tasks.TakeAllFIFO();
-    std::int32_t size = 0;
-
-    auto* task = static_cast<ITask*>(nodes);
-    while (task != nullptr) {
-      auto* next = static_cast<ITask*>(task->next);
-      task->Call();
-      task = next;
-      ++size;
+    auto* node = _tasks.exchange(nullptr, std::memory_order_acquire);
+    Node* prev = nullptr;
+    while (node != nullptr) {
+      auto* next = node->next;
+      node->next = prev;
+      prev = node;
+      node = next;
     }
-
-    if (_work_counter.fetch_sub(size, std::memory_order_acq_rel) > size) {
-      _executor->Submit(*this);
-    } else {
+    while (prev != nullptr) {
+      auto* next = prev->next;
+      static_cast<ITask*>(prev)->Call();
+      prev = next;
+    }
+    if (_tasks.compare_exchange_strong(node, Mark(), std::memory_order_release, std::memory_order_relaxed)) {
       static_cast<ITask&>(*this).DecRef();
+    } else {
+      _executor->Submit(*this);
     }
   }
 
   void Cancel() noexcept final {
-    std::int32_t size = 0;
-    do {
-      size = 0;
-      auto* nodes = _tasks.TakeAllFIFO();
-      auto* task = static_cast<ITask*>(nodes);
-      while (task != nullptr) {
-        auto* next = static_cast<ITask*>(task->next);
-        task->Cancel();
-        task = next;
-        ++size;
-      }
-    } while (_work_counter.fetch_sub(size, std::memory_order_acq_rel) > size);
+    auto* node = _tasks.exchange(Mark(), std::memory_order_acquire);
+    while (node != nullptr) {
+      auto* next = node->next;
+      static_cast<ITask*>(node)->Cancel();
+      node = next;
+    }
     static_cast<ITask&>(*this).DecRef();
   }
 
+  Node* Mark() noexcept {
+    return static_cast<Node*>(this);
+  }
+
   IExecutorPtr _executor;
-  detail::MPSCStack _tasks;
-  // TODO remove _work_counter, make active/inactive like libunifex
-  alignas(kCacheLineSize) yaclib_std::atomic_int32_t _work_counter{0};
+  std::atomic<Node*> _tasks{Mark()};
 };
 
 }  // namespace
