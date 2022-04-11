@@ -44,10 +44,6 @@ class ResultCore : public BaseCore {
     }
   }
 
-  void SetStop() final {
-    Set(StopTag{});
-  }
-
   [[nodiscard]] Result<V, E>& Get() noexcept {
     return _result;
   }
@@ -64,9 +60,6 @@ class ResultCore<void, void> : public BaseCore {
 
   template <typename T>
   void Set(T&&) noexcept {
-  }
-
-  void SetStop() final {
   }
 };
 

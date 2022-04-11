@@ -92,10 +92,10 @@ void BaseCore::Submit() noexcept {
   Clean();
 }
 
-void BaseCore::Cancel() noexcept {  // Opposite for Call with SetResult
+void BaseCore::Cancel() noexcept {  // Opposite for Call with Set(...)
   _caller = nullptr;
   Clean();
-  this->DecRef();
+  DecRef();
 }
 
 void BaseCore::Clean() noexcept {

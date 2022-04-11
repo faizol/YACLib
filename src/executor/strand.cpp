@@ -14,20 +14,13 @@
 namespace yaclib {
 namespace {
 
-class Strand : public IExecutor, public ITask {
+class alignas(kCacheLineSize) Strand : public IExecutor, public ITask {
   // Inheritance from two IRef's, but that's okay, because they are pure virtual
  public:
   explicit Strand(IExecutorPtr executor) : _executor{std::move(executor)} {
   }
 
   ~Strand() override {
-    auto* nodes = _tasks.TakeAllLIFO();
-    auto* task = static_cast<ITask*>(nodes);
-    while (task != nullptr) {
-      auto* next = static_cast<ITask*>(task->next);
-      task->Cancel();
-      task = next;
-    }
   }
 
  private:
@@ -64,6 +57,18 @@ class Strand : public IExecutor, public ITask {
   }
 
   void Cancel() noexcept final {
+    std::int32_t size = 0;
+    do {
+      size = 0;
+      auto* nodes = _tasks.TakeAllFIFO();
+      auto* task = static_cast<ITask*>(nodes);
+      while (task != nullptr) {
+        auto* next = static_cast<ITask*>(task->next);
+        task->Cancel();
+        task = next;
+        ++size;
+      }
+    } while (_work_counter.fetch_sub(size, std::memory_order_acq_rel) > size);
     static_cast<ITask&>(*this).DecRef();
   }
 

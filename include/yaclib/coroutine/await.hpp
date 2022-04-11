@@ -10,7 +10,7 @@
 namespace yaclib {
 
 template <typename... V, typename... E>
-detail::FutureAwaiter Await(Future<V, E>&... fs) {
+detail::FutureAwaiter Await(IExecutor& executor, Future<V, E>&... fs) {
   return detail::FutureAwaiter(fs...);
 }
 

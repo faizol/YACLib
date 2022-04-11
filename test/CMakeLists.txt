@@ -62,20 +62,21 @@ set(YACLIB_UNIT_SOURCES
   unit/executor/strand
   )
 
-if (YACLIB_LOG STREQUAL "ERROR")
-  list(APPEND YACLIB_DEFINITIONS YACLIB_LOG_ERROR)
-elseif (YACLIB_LOG STREQUAL "INFO")
-  list(APPEND YACLIB_DEFINITIONS YACLIB_LOG_ERROR)
-  list(APPEND YACLIB_DEFINITIONS YACLIB_LOG_INFO)
-endif ()
-
 if (CORO)
   list(APPEND YACLIB_UNIT_SOURCES
     unit/coroutine/await
     unit/coroutine/dummy
     unit/coroutine/future_coro_traits
     unit/coroutine/stress
+    unit/coroutine/via
     )
+endif ()
+
+if (YACLIB_LOG STREQUAL "ERROR")
+  list(APPEND YACLIB_DEFINITIONS YACLIB_LOG_ERROR)
+elseif (YACLIB_LOG STREQUAL "INFO")
+  list(APPEND YACLIB_DEFINITIONS YACLIB_LOG_ERROR)
+  list(APPEND YACLIB_DEFINITIONS YACLIB_LOG_INFO)
 endif ()
 
 #TODO(MBkkt) Add options which shuffle tests list, maybe just use gtest options?

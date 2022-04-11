@@ -23,8 +23,6 @@ class BaseCore : public InlineCore {
   [[nodiscard]] bool SetWait(IRef& callback) noexcept;
   [[nodiscard]] bool ResetWait() noexcept;
 
-  virtual void SetStop() = 0;
-
   void Stop() noexcept;
   [[nodiscard]] bool Empty() const noexcept;
   [[nodiscard]] bool Alive() const noexcept;
@@ -36,7 +34,7 @@ class BaseCore : public InlineCore {
   IntrusivePtr<IRef> _callback;
 
   void Submit() noexcept;
-  void Cancel() noexcept final;
+  void Cancel() noexcept override;
 
  private:
   void Clean() noexcept;

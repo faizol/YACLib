@@ -1,26 +1,21 @@
 #pragma once
 
 #include <yaclib/async/detail/result_core.hpp>
-#include <yaclib/async/future.hpp>
-#include <yaclib/config.hpp>
 #include <yaclib/coroutine/detail/coroutine_deleter.hpp>
-#include <yaclib/coroutine/detail/suspend_condition.hpp>
 #include <yaclib/util/detail/atomic_counter.hpp>
 #include <yaclib/util/intrusive_ptr.hpp>
 
 #include <exception>
-#include <type_traits>
 
 namespace yaclib::detail {
 
 template <typename V, typename E>
-struct PromiseType;
+class PromiseType;
 
 template <typename V, typename E>
 class Destroy {
  public:
-  Destroy() noexcept {
-  }
+  Destroy() noexcept = default;
 
   bool await_ready() noexcept {
     return false;
@@ -35,9 +30,11 @@ class Destroy {
 };
 
 template <typename V, typename E>
-struct PromiseType : AtomicCounter<ResultCore<V, E>, CoroutineDeleter> {
+class BasePromiseType : public AtomicCounter<ResultCore<V, E>, CoroutineDeleter> {
   using Base = AtomicCounter<ResultCore<V, E>, CoroutineDeleter>;
-  PromiseType() : Base{2} {  // get_return_object is gonna be invoked right after ctor
+
+ public:
+  BasePromiseType() : Base{2} {  // get_return_object is gonna be invoked right after ctor
   }
 
   Future<V, E> get_return_object() {
@@ -52,6 +49,32 @@ struct PromiseType : AtomicCounter<ResultCore<V, E>, CoroutineDeleter> {
     return {};
   }
 
+  void unhandled_exception() noexcept {
+    Base::Set(std::current_exception());
+  }
+
+ private:
+  void Call() noexcept final {
+    auto handle = yaclib_std::coroutine_handle<PromiseType<V, E>>::from_promise(static_cast<PromiseType<V, E>&>(*this));
+    assert(handle);
+    assert(!handle.done());
+    handle.resume();
+  }
+
+  void Cancel() noexcept final {
+    auto handle = yaclib_std::coroutine_handle<PromiseType<V, E>>::from_promise(static_cast<PromiseType<V, E>&>(*this));
+    assert(handle);
+    assert(!handle.done());
+    Base::Set(StopTag{});
+    Base::Cancel();
+  }
+};
+
+template <typename V, typename E>
+class PromiseType : public BasePromiseType<V, E> {
+  using Base = BasePromiseType<V, E>;
+
+ public:
   void return_value(const V& value) noexcept(std::is_nothrow_copy_constructible_v<V>) {
     Base::Set(value);
   }
@@ -59,36 +82,15 @@ struct PromiseType : AtomicCounter<ResultCore<V, E>, CoroutineDeleter> {
   void return_value(V&& value) noexcept(std::is_nothrow_move_constructible_v<V>) {
     Base::Set(std::move(value));
   }
-
-  void unhandled_exception() noexcept {
-    Base::Set(std::current_exception());
-  }
 };
 
 template <typename E>
-struct PromiseType<void, E> : AtomicCounter<ResultCore<void, E>, CoroutineDeleter> {
-  using Base = AtomicCounter<ResultCore<void, E>, CoroutineDeleter>;
-  PromiseType() : Base{2} {  // get_return_object is gonna be invoked right after ctor
-  }
+class PromiseType<void, E> : public BasePromiseType<void, E> {
+  using Base = BasePromiseType<void, E>;
 
-  Future<void, E> get_return_object() noexcept {
-    return {ResultCorePtr<void, E>{NoRefTag{}, this}};
-  }
-
-  yaclib_std::suspend_never initial_suspend() noexcept {
-    return {};
-  }
-
-  Destroy<void, E> final_suspend() noexcept {
-    return {};
-  }
-
+ public:
   void return_void() noexcept {
     Base::Set(Unit{});
-  }
-
-  void unhandled_exception() noexcept {
-    Base::Set(std::current_exception());
   }
 };
 
